@@ -61,16 +61,19 @@ This repository documents the full deployment, security hardening, and attack si
 
 ### 1.1 System Update
 Update your system packages:
-
-`sudo apt update && sudo apt upgrade -y`
+```
+sudo apt update && sudo apt upgrade -y
+```
 
 ### 1.2 Install Apache
 Install Apache and enable the service:
 
 ```
-`sudo apt install apache2 -y`  
-`sudo systemctl enable apache2`  
-`sudo systemctl start apache2`
+sudo apt install apache2 -y
+-
+sudo systemctl enable apache2
+-
+sudo systemctl start apache2
 ```
 ### 1.3 Install & Configure MariaDB
 Install MariaDB and start the service:
