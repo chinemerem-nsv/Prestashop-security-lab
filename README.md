@@ -164,14 +164,25 @@ sudo systemctl reload apache2
 ```
 
 ### 1.8 Finalize Installation
-Open a browser and access:
+Open your ubuntu browser and access:
 ```
 http://<YOUR_UBUNTU_IP>/prestashop
 ```
 
 **Complete the web installation wizard (language, license, database, admin account).**
 
-Find the randomized admin folder:
+![PrestaShop Installation Page](screenshots/installation_page.png)
+
+**PrestaShop Home Page**
+
+![PrestaShop Home Page](screenshots/prestashop_home.png)
+
+**Remove the installation directory:**
+```
+sudo rm -rf /var/www/html/prestashop/install
+```
+
+**Find the randomized admin folder:**
 ```
 ls /var/www/html/prestashop | grep admin
 ```
@@ -180,11 +191,7 @@ ls /var/www/html/prestashop | grep admin
 ```
 http://<YOUR_UBUNTU_IP>/prestashop/<admin_folder_name>
 ```
-
-**Remove the installation directory:**
-```
-sudo rm -rf /var/www/html/prestashop/install
-```
+![Admin Panel](screenshots/admin_panel.png)
 
 ---
 
@@ -213,13 +220,15 @@ Kali attacker VM: Used to perform simulated attacks.
 Network: Host‑Only Adapter for Ubuntu ↔ Kali communication.  
 
 ### 3.2 Attack 1 — Directory Enumeration (Gobuster) 
+**Objective: Discover accessible directories and files.**  
 ```
 gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt
 ```
 
-<img src="screenshots/gobuster_scan.png" width="500">
+![Gobuster Scan](screenshots/gobuster_scan.png)
 
 ### 3.3 Attack 2 — XSS Injection Test
+**Objective: Test input fields for Cross-Site Scripting.** 
 ```
 <script>alert('XSS')</script>
 ```
@@ -227,12 +236,15 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 ![XSS Test Result](screenshots/xss_test_result.png)
 
 ### 3.4 Attack 3 — Brute Force Admin Login (Hydra)  
-Create a new file called **passwords.txt**
+**Objective: Test strength of admin credentials.**
+
+**Create a new file called passwords.txt**
 ```
 nano passwords.txt
 ```
 
 **Then enter passwords you want to test, one per line, for example:**  
+
 123456  
 psswrd  
 admin123  
