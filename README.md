@@ -302,7 +302,7 @@ sudo tail -n 50 /var/log/apache2/error.log
 - Brute-force login blocked
 - XSS attack prevented
 - Directory enumeration revealed paths, mitigated via configuration
-- Logs confirm all attacks reached the server but were blocked
+- Logs confirm all attacks reached the server
 
 ---
 
