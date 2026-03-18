@@ -146,15 +146,14 @@ sudo nano /etc/apache2/sites-available/prestashop.conf
 ServerName yourdomain.com  
 DocumentRoot /var/www/html/prestashop  
 
-<Directory /var/www/html/prestashop>  
-
+<Directory /var/www/html/prestashop>   
     AllowOverride All  
     Require all granted  
-    
 </Directory>  
 
 ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
 CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined  
+
 </VirtualHost>  
 
 **Enable site and rewrite module:**
