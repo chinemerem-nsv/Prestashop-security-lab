@@ -149,12 +149,12 @@ DocumentRoot /var/www/html/prestashop
 <Directory /var/www/html/prestashop>   
     AllowOverride All  
     Require all granted  
-</Directory>  
+/Directory>  
 
 ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
 CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined  
 
-</VirtualHost>  
+/VirtualHost>  
 
 **Enable site and rewrite module:**
 ```
