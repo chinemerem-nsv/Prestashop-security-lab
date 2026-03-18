@@ -11,7 +11,7 @@ This repository documents the full deployment, security hardening, and attack si
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 | Category | Details |
 |---------|---------|
@@ -27,7 +27,7 @@ This repository documents the full deployment, security hardening, and attack si
 
 ---
 
-## 🎯 Threat Model
+##  Threat Model
 
 | Asset | Threat | Attack Method | Potential Impact | Mitigation Applied |
 |------|-------|--------------|------------------|-------------------|
@@ -38,7 +38,7 @@ This repository documents the full deployment, security hardening, and attack si
 
 ---
 
-## 📑 Table of Contents
+##  Table of Contents
 
 - [1. Deployment Steps](#1-deployment-steps)
   - [1.1 System Update](#11-system-update)
@@ -67,42 +67,50 @@ Update your system packages:
 ### 1.2 Install Apache
 Install Apache and enable the service:
 
+```
 `sudo apt install apache2 -y`  
 `sudo systemctl enable apache2`  
 `sudo systemctl start apache2`
-
+```
 ### 1.3 Install & Configure MariaDB
 Install MariaDB and start the service:
 
+```
 `sudo apt install mariadb-server mariadb-client -y`  
 `sudo systemctl enable mariadb`  
 `sudo systemctl start mariadb`
-
+```
 **Create the database and user for PrestaShop:**
 
 ```sql
 sudo mysql -u root -p
 ```
 CREATE DATABASE prestashop CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
+
 CREATE USER 'psuser'@'localhost' IDENTIFIED BY 'StrongPasswordHere'; 
+
 GRANT ALL PRIVILEGES ON prestashop.* TO 'psuser'@'localhost'; 
+
 FLUSH PRIVILEGES; 
+
 EXIT;
 
 > **Important:** Replace `StrongPasswordHere` with a strong, unique password. You will need the `psuser` username and this password during web installation.
 
 ### 1.4 Install PHP 8.3 & Required Extensions
 Install PHP and extensions:
-
+```
 `sudo apt install php8.3-zip`  
 `sudo apt install php8.3-gd php8.3-curl php8.3-intl php8.3-mbstring php8.3-xml php8.3-mysql`  
 `sudo apt install php8.3-cli php8.3-common php8.3-soap php8.3-opcache libapache2-mod-php8.3 -y`  
 `php -v`
+```
 
 ### 1.5 Configure PHP
 Edit **/etc/php/8.3/apache2/php.ini**
-
+```
 `sudo nano /etc/php/8.3/apache2/php.ini`
+```
 
 Then inside file, set:
 - memory_limit = 512M 
@@ -113,8 +121,9 @@ Then inside file, set:
 - date.timezone = Europe/Bucharest
 
 Restart Apache:
-
+```
 `sudo systemctl restart apache2`
+```
 
 ### 1.6 Download & Deploy PrestaShop
 Download PrestaShop and deploy:
@@ -198,43 +207,37 @@ Updated PrestaShop URL: Changed inside website configuration to 192.168.56.101 s
 Kali attacker VM: Used to perform simulated attacks.  
 Network: Host‑Only Adapter for Ubuntu ↔ Kali communication. 
 
-### 3.2 Attack 1 — Directory Enumeration (Gobuster)
-Command:  
-
+### 3.2 Attack 1 — Directory Enumeration (Gobuster) 
+```
 `gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt`
-
-## 3. PrestaShop Attack Simulation
-
-### 3.2 Attack 1 — Directory Enumeration (Gobuster)
-Command:  
-
-`gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt`
+```
 
 Evidence: gobuster_scan.png
 
 3.3 Attack 2 — XSS Injection Test
-Payload:
-
+```
 `<script>alert('XSS')</script>`
+```
 
 Evidence: xss_test_result.png
 
-3.4 Attack 3 — Brute Force Admin Login (Hydra)
-Command:
-
+3.4 Attack 3 — Brute Force Admin Login (Hydra
+```
 `hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"`
+```
 
 Evidence: hydra_attack.png
 
 Apache log evidence:
-
+```
 `sudo tail -n 50 /var/log/apache2/error.log`
+```
 
 Evidence: apache_log_evidence.png
 
 ---
 
-4.## Findings
+4. ## Findings
    
 - Brute-force login blocked
 - XSS attack prevented
@@ -254,5 +257,5 @@ Evidence: apache_log_evidence.png
 
 ---
 
-6. Conclusion
+6. ## Conclusion
 The PrestaShop instance successfully resisted simulated attacks. Applied defenses (folder randomization, installer removal, input sanitization, strong credentials) provide a secure baseline for lab testing.
