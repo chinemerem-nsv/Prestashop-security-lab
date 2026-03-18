@@ -60,12 +60,14 @@ This repository documents the full deployment, security hardening, and attack si
 ## 1. Deployment Steps
 
 ### 1.1 System Update
+
 Update your system packages:
 ```
 sudo apt update && sudo apt upgrade -y
 ```
 
 ### 1.2 Install Apache
+
 Install Apache and enable the service:
 ```
 sudo apt install apache2 -y
@@ -74,6 +76,7 @@ sudo systemctl start apache2
 ```
 
 ### 1.3 Install & Configure MariaDB
+
 Install MariaDB and start the service:
 ```
 sudo apt install mariadb-server mariadb-client -y
@@ -95,6 +98,7 @@ EXIT;
 > **Important:** Replace `StrongPasswordHere` with a strong, unique password. You will need the `psuser` username and this password during web installation.
 
 ### 1.4 Install PHP 8.3 & Required Extensions
+
 Install PHP and extensions:
 ```
 sudo apt install php8.3-zip
@@ -104,12 +108,14 @@ php -v
 ```
 
 ### 1.5 Configure PHP
+
 Edit **/etc/php/8.3/apache2/php.ini**
 ```
 sudo nano /etc/php/8.3/apache2/php.ini
 ```
 
 **Then inside file, set:**  
+
 - memory_limit = 512M 
 - upload_max_filesize = 64M 
 - post_max_size = 64M 
@@ -123,6 +129,7 @@ sudo systemctl restart apache2
 ```
 
 ### 1.6 Download & Deploy PrestaShop
+
 Download PrestaShop and deploy:
 ```
 cd /tmp 
@@ -135,6 +142,7 @@ sudo chmod -R 755 /var/www/html/prestashop
 ```
 
 ### 1.7 Configure Apache Virtual Host
+
 Create **/etc/apache2/sites-available/prestashop.conf:**
 ```
 sudo nano /etc/apache2/sites-available/prestashop.conf
@@ -149,12 +157,12 @@ DocumentRoot /var/www/html/prestashop
 <Directory /var/www/html/prestashop>   
     AllowOverride All  
     Require all granted  
-</Directory>  
+/Directory>  
 
 ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
 CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined  
 
-</VirtualHost>  
+/VirtualHost>  
 
 **Save the file (Ctrl+O → Enter) and exit (Ctrl+X).**  
 
@@ -166,6 +174,7 @@ sudo systemctl reload apache2
 ```
 
 ### 1.8 Finalize Installation
+
 Open your ubuntu browser and access:
 ```
 http://<YOUR_UBUNTU_IP>/prestashop
@@ -175,6 +184,8 @@ http://<YOUR_UBUNTU_IP>/prestashop
 
 ![PrestaShop Installation Page](screenshots/installation_page.png)
 
+---
+
 **Remove the installation directory:**
 ```
 sudo rm -rf /var/www/html/prestashop/install
@@ -182,6 +193,8 @@ sudo rm -rf /var/www/html/prestashop/install
 **PrestaShop Home Page**
 
 ![PrestaShop Home Page](screenshots/prestashop_home.png)
+
+---
 
 **Find the randomized admin folder:**
 ```
@@ -223,7 +236,8 @@ Network: Host‑Only Adapter for Ubuntu ↔ Kali communication.
 ---
 
 ### 3.2 Attack 1 — Directory Enumeration (Gobuster) 
-**Objective: Discover accessible directories and files.**  
+
+**Objective:** Discover accessible directories and files.  
 ```
 gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt
 ```
@@ -233,7 +247,10 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 ---
 
 ### 3.3 Attack 2 — XSS Injection Test
-**Objective: Test input fields for Cross-Site Scripting.** 
+
+**Objective:** Test input fields for Cross-Site Scripting.
+
+**Tested “Search our catalog” and newsletter email field.**  
 ```
 <script>alert('XSS')</script>
 ```
@@ -243,7 +260,8 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 ---
 
 ### 3.4 Attack 3 — Brute Force Admin Login (Hydra)  
-**Objective: Test strength of admin credentials.**
+
+**Objective:** Test strength of admin credentials.
 
 **Create a new file called passwords.txt**
 ```
@@ -252,14 +270,15 @@ nano passwords.txt
 
 **Then enter passwords you want to test, one per line, for example:**  
 
-123456  
-psswrd  
-admin123  
-qwerty  
-PrestaShop2026  
-StrongPass!  
+- 123456  
+- psswrd  
+- admin123  
+- qwerty  
+- PrestaShop2026  
+- StrongPass!  
 
 **Save the file (Ctrl+O → Enter) and exit (Ctrl+X).**  
+
 Now **passwords.txt** can be used with Hydra:
 ```
 hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"
