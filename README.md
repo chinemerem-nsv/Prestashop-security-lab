@@ -147,8 +147,10 @@ ServerName yourdomain.com
 DocumentRoot /var/www/html/prestashop  
 
 <Directory /var/www/html/prestashop>  
+
     AllowOverride All  
     Require all granted  
+    
 </Directory>  
 
 ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
@@ -218,14 +220,14 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 
 Evidence: gobuster_scan.png
 
-3.3 Attack 2 — XSS Injection Test
+### 3.3 Attack 2 — XSS Injection Test
 ```
 <script>alert('XSS')</script>
 ```
 
 Evidence: xss_test_result.png
 
-3.4 Attack 3 — Brute Force Admin Login (Hydra)
+### 3.4 Attack 3 — Brute Force Admin Login (Hydra)
 ```
 hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"
 ```
@@ -241,7 +243,7 @@ Evidence: apache_log_evidence.png
 
 ---
 
-4. ## Findings
+## 4. Findings
    
 - Brute-force login blocked
 - XSS attack prevented
@@ -250,7 +252,7 @@ Evidence: apache_log_evidence.png
 
 ---
 
-5. ## Mitigation / Defense
+## 5. Mitigation / Defense
    
 - Strong admin password enforced
 - Admin URL randomized
@@ -261,5 +263,5 @@ Evidence: apache_log_evidence.png
 
 ---
 
-6. ## Conclusion
+## 6. Conclusion
 The PrestaShop instance successfully resisted simulated attacks. Applied defenses (folder randomization, installer removal, input sanitization, strong credentials) provide a secure baseline for lab testing.
