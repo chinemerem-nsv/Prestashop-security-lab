@@ -54,7 +54,7 @@ This repository documents the full deployment, security hardening, and attack si
 - [4. Findings](#4-findings)
 - [5. Mitigation / Defense](#5-mitigation--defense)
 - [6. Conclusion](#7-conclusion)
-
+- [7. Key Takeaways](#key-takeaways)
 ---
 
 ## 1. Deployment Steps
@@ -319,3 +319,20 @@ sudo tail -n 50 /var/log/apache2/error.log
 
 ## 6. Conclusion
 The PrestaShop instance successfully resisted simulated attacks. Applied defenses (folder randomization, installer removal, input sanitization, strong credentials) provide a secure baseline for lab testing.
+
+---
+
+## 7. Key Takeaways
+
+- Successfully deployed **PrestaShop** on an Ubuntu server environment.
+- Configured Apache, PHP, and MySQL manually, improving understanding of full web stack setup.
+- Implemented security hardening measures including removal of installation files and admin path randomization.
+- Verified secure session handling using HttpOnly and SameSite cookie attributes.
+- Simulated real-world attacks from a Kali Linux attacker machine in a controlled lab environment.
+- Performed directory enumeration, XSS testing, and brute‑force login attempts.
+- Confirmed defensive configurations through server logs and attack results.
+- Demonstrated how proper configuration and strong authentication mitigate common web attacks.
+- Practiced documenting security testing with structured evidence suitable for professional reporting.
+- Built a repeatable cybersecurity lab useful for vulnerability assessment and defensive testing.
+
+---
