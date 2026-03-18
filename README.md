@@ -149,12 +149,14 @@ DocumentRoot /var/www/html/prestashop
 <Directory /var/www/html/prestashop>   
     AllowOverride All  
     Require all granted  
-/Directory>  
+</Directory>  
 
 ErrorLog ${APACHE_LOG_DIR}/prestashop_error.log  
 CustomLog ${APACHE_LOG_DIR}/prestashop_access.log combined  
 
-/VirtualHost>  
+</VirtualHost>  
+
+**Save the file (Ctrl+O → Enter) and exit (Ctrl+X).**  
 
 **Enable site and rewrite module:**
 ```
@@ -173,14 +175,13 @@ http://<YOUR_UBUNTU_IP>/prestashop
 
 ![PrestaShop Installation Page](screenshots/installation_page.png)
 
-**PrestaShop Home Page**
-
-![PrestaShop Home Page](screenshots/prestashop_home.png)
-
 **Remove the installation directory:**
 ```
 sudo rm -rf /var/www/html/prestashop/install
 ```
+**PrestaShop Home Page**
+
+![PrestaShop Home Page](screenshots/prestashop_home.png)
 
 **Find the randomized admin folder:**
 ```
@@ -219,6 +220,8 @@ Updated PrestaShop URL: Changed inside website configuration to 192.168.56.101 s
 Kali attacker VM: Used to perform simulated attacks.  
 Network: Host‑Only Adapter for Ubuntu ↔ Kali communication.  
 
+---
+
 ### 3.2 Attack 1 — Directory Enumeration (Gobuster) 
 **Objective: Discover accessible directories and files.**  
 ```
@@ -227,6 +230,8 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 
 ![Gobuster Scan](screenshots/gobuster_scan.png)
 
+---
+
 ### 3.3 Attack 2 — XSS Injection Test
 **Objective: Test input fields for Cross-Site Scripting.** 
 ```
@@ -234,6 +239,8 @@ gobuster dir -u http://192.168.56.101/prestashop -w /usr/share/wordlists/dirb/co
 ```
 
 ![XSS Test Result](screenshots/xss_test_result.png)
+
+---
 
 ### 3.4 Attack 3 — Brute Force Admin Login (Hydra)  
 **Objective: Test strength of admin credentials.**
@@ -259,6 +266,8 @@ hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/pres
 ```
 
 ![Hydra Attack](screenshots/hydra_attack.png)
+
+---
 
 **Apache log evidence:**
 ```
