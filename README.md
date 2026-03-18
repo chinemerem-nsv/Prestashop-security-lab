@@ -53,8 +53,8 @@ This repository documents the full deployment, security hardening, and attack si
 - [3. PrestaShop Attack Simulation](#3-prestashop-attack-simulation)
 - [4. Findings](#4-findings)
 - [5. Mitigation / Defense](#5-mitigation--defense)
-- [6. Conclusion](#7-conclusion)
-- [7. Key Takeaways](#key-takeaways)
+- [6. Conclusion](#6-conclusion)
+- [7. Key Takeaways](#7-key-takeaways)
 ---
 
 ## 1. Deployment Steps
